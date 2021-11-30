@@ -1,20 +1,18 @@
-
 import axios, { Axios } from "axios";
 import React,{Component} from "react";
 export default class todo extends Component{
-     
-state={
-    todos:[],
-    isEditMode:false,
-    todoObj:{
-        title:"",
-        completed:"",
-        userId:1,
-    },
-};
-
+    state={
+        users:[],
+        isEditMode:false,
+       userObj:{
+           userid: 1,
+           username: "",
+           email: "",
+           phoneNo:"",
+       },
+    };
     onClickHandler=(id)=>{
-        axios.delete("https://jsonplaceholder.typicode.com/todos/" +id).then((response)=>{
+        axios.delete("https://jsonplaceholder.typicode.com/users/" +id).then((response)=>{
             console.log(response);
             this.FetchMethod();
             alert("Deleted");
@@ -24,30 +22,39 @@ state={
     }
     onChangeHandler = (event) => {
         const {name,value}=event.target;
-        const todoObjectCopy=this.state.todoObj;
-        todoObjectCopy[name]=value;
-        this.setState({todoObj:todoObjectCopy});
+        const userObjectCopy=this.state.userObj;
+        userObjectCopy[name]=value;
+        this.setState({userObj:userObjectCopy});
     };
     onEditClickHandler = (id) => {
-        const editObject=this.state.todos.find((todo) => todo.id === id);
+        const editObject=this.state.users.find((user) => user.id === id);
         if(editObject)
         {
             this.setState({
-                todoObj:editObject,isEditMode:true
+                userObj:editObject,isEditMode:true
             });
         }
     };
     resetState ()
     {
         this.setState({
-            todoObj:{
-                title:"",
-                completed:"",
+            userObj:{
+                username:"",
+                email:"",
                 userId:1,
+                phoneNo:"",
             },
             isEditMode:false,
         });
     }
+  
+    onChangeHandler = (event) => {
+        const {name,value}=event.target;
+        const userObjectCopy=this.state.userObj;
+        userObjectCopy[name]=value;
+        this.setState({userObj:userObjectCopy});
+    };
+
     onCancelClickHandler = (event) =>{
         event.preventDefault();
         this.resetState();
@@ -56,7 +63,7 @@ state={
         event.preventDefault();
         if(this.state.isEditMode)
         {
-            axios.put("https://jsonplaceholder.typicode.com/todos/"+this.state.todoObj.id,this.state.todoObj)
+            axios.put("https://jsonplaceholder.typicode.com/users/"+this.state.userObj.id,this.state.userObj)
             .then((response)=> {console.log(response);
                 this.FetchMethod();
                 alert("Updated");
@@ -65,47 +72,49 @@ state={
         }
         else{
             console.log(this.state);
-            axios.post("https://jsonplaceholder.typicode.com/todos",this.state.todoObj)
+            axios.post("https://jsonplaceholder.typicode.com/users",this.state.userObj)
             .then((response) => {console.log(response);
                 this.FetchMethod();
                 alert("Created");
                 this.resetState();
             })
+
         }
     };
-render()
-{
+
+ render(){
+
     return(
         <>
-            <h1>Hello I am In todo</h1>
+            <h1>Hello I am USER</h1>
             <form onSubmit={this.onFormSubmitClick}>
-                <label>Title</label>
+                <label>USERNAME</label>
                 <input
-                    name="title"
-                    value={this.state.todoObj.title}
+                    name="username"
+                    value={this.state.userObj.username}
                     onChange={this.onChangeHandler}
                 />
-                <label>Completed</label>
+                <label>email</label>
                 <input
-                    name="completed"
-                    value={this.state.todoObj.body}
+                    name="email"
+                    value={this.state.userObj.email}
                     onChange={this.onChangeHandler}
                 />
 
                 <button type="submit">{this.state.isEditMode ? "Update" : "Submit"}</button>
                 <button onClick = {this.onCancelClickHandler}>Cancel</button>
             </form>
-            {this.state.todos.map((todo,index)=>(
+            {this.state.users.map((user,index)=>(
                 <div key={index}>
                     <div>
-                    {index+1}.{todo.title}
+                    {index+1}.{user.title}
                     </div>
                     <br/>
                     <button onClick={()=>{
-                this.onClickHandler(todo.id); }}>Delete</button>
+                this.onClickHandler(user.id); }}>Delete</button>
 
                 <button onClick={() =>{
-                    this.onEditClickHandler(todo.id);
+                    this.onEditClickHandler(user.id);
                 }}>Edit</button>
 
                 </div>
@@ -120,10 +129,16 @@ componentDidMount()
 }
 
 FetchMethod() {
-    axios.get("https://jsonplaceholder.typicode.com/todos").then((response) => {
+    axios.get("https://jsonplaceholder.typicode.com/users").then((response) => {
         console.log(response.data);
-        this.setState({ todos: response.data });
+        this.setState({ users: response.data });
     });
 
 }
-}
+};
+
+    
+
+    
+    
+
